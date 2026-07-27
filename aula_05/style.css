@@ -9,7 +9,7 @@ body {
 .lado-esquerdo {
     flex: 1;
     position: relative;
-    background-image: url("pug.png");
+    background-image: url("img/pug.png");
     background-repeat: no-repeat;
     background-size: 650px;
     background-position: 50px center;
