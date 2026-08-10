@@ -1,0 +1,77 @@
+/* --- CATEGORIAS & CARDS --- */
+.categorias {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+}
+
+.card {
+    width: 140px;
+    height: 170px;
+    border-radius: 20px;
+    overflow: hidden; 
+    position: relative;
+    display: flex;
+    align-items: flex-end; 
+    padding: 15px;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    background-color: #333333; 
+}
+
+.card img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    z-index: 1;
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.1) 60%);
+    z-index: 2; 
+}
+
+.card-text {
+    position: relative;
+    z-index: 3;
+}
+
+/* --- SEÇÃO DE DICAS --- */
+.grupo-dicas {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+}
+
+.dicas-le h1 {
+    font-size: 41px;
+    font-weight: bold;
+}
+
+.dicas-le p {
+    font-size: 16px; /* Defina o tamanho do texto aqui (ex: 16px) */
+    line-height: 1.5;
+    color: #555555;
+}
+
+.dicas-ld img {
+    width: 100%;
+    max-width: 684px;
+    height: auto;
+    max-height: 800px;
+    object-fit: cover;
+    border-radius: 20px;
+}
