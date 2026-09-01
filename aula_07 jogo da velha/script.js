@@ -1,91 +1,58 @@
 const casas = document.querySelectorAll('.casa');
-const inputX = document.getElementById('jogadorX');
-const inputO = document.getElementById('jogadorO');
-const btnReiniciar = document.getElementById('btn-reiniciar');
-
 let jogadorAtual = 'X';
 let jogoAtivo = true;
 
+// Combinações possíveis para vencer
 const combinacoesVitoria = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8],
-    [0, 3, 6], [1, 4, 7], [2, 5, 8],
-    [0, 4, 8], [2, 4, 6]
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Linhas
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Colunas
+    [0, 4, 8], [2, 4, 6]             // Diagonais
 ];
 
-inputX.addEventListener('input', atualizarTextoVez);
-inputO.addEventListener('input', atualizarTextoVez);
-
-function obterNomeAtual() {
-    if (jogadorAtual === 'X') {
-        return inputX.value.trim() || 'Jogador X';
-    } else {
-        return inputO.value.trim() || 'Jogador O';
-    }
-}
-
-function atualizarTextoVez() {
-    const statusTexto = document.getElementById('nome-vez');
-    if (statusTexto && jogoAtivo) {
-        statusTexto.textContent = `${obterNomeAtual()} (${jogadorAtual})`;
-    }
-}
-
-casas.forEach((casa) => {
-    casa.addEventListener('click', () => tratarClique(casa));
+// Adiciona o evento de clique em cada casa
+casas.forEach((casa, index) => {
+    casa.addEventListener('click', () => tratarClique(casa, index));
 });
 
-function tratarClique(casa) {
+function tratarClique(casa, index) {
+    // Se a casa já foi clicada ou o jogo acabou, ignora o clique
     if (casa.textContent !== '' || !jogoAtivo) return;
 
+    // Marca a jogada na tela
     casa.textContent = jogadorAtual;
 
+    // Estiliza o texto centralizado na casa
+    casa.style.display = 'flex';
+    casa.style.alignItems = 'center';
+    casa.style.justifyContent = 'center';
+    casa.style.fontSize = '40px';
+    casa.style.fontFamily = 'sans-serif';
+
+    // Verifica se houve vencedor ou empate
     if (verificarVitoria()) {
-        const vencedor = obterNomeAtual();
-        document.getElementById('status').textContent = `🎉 ${vencedor} venceu!`;
+        setTimeout(() => alert(`O jogador '${jogadorAtual}' venceu!`), 10);
         jogoAtivo = false;
-        
-        // Exibe o alerta com um pequeno atraso para o simbolo ('X' ou 'O') aparecer na tela antes
-        setTimeout(() => {
-            alert(`Parabéns! O jogador ${vencedor} (${jogadorAtual}) venceu a partida!`);
-        }, 100);
         return;
     }
 
     if (verificarEmpate()) {
-        document.getElementById('status').textContent = '🤝 Empate!';
+        setTimeout(() => alert('Empate!'), 10);
         jogoAtivo = false;
-        
-        setTimeout(() => {
-            alert('Deu velha! O jogo terminou em empate.');
-        }, 100);
         return;
     }
 
+    // Alterna a vez do jogador
     jogadorAtual = jogadorAtual === 'X' ? 'O' : 'X';
-    atualizarTextoVez();
 }
 
 function verificarVitoria() {
     return combinacoesVitoria.some(combinacao => {
-        return combinacao.every(index => casas[index].textContent === jogadorAtual);
+        return combinacao.every(index => {
+            return casas[index].textContent === jogadorAtual;
+        });
     });
 }
 
 function verificarEmpate() {
     return [...casas].every(casa => casa.textContent !== '');
 }
-
-btnReiniciar.addEventListener('click', reiniciarJogo);
-
-function reiniciarJogo() {
-    casas.forEach(casa => {
-        casa.textContent = '';
-    });
-    jogadorAtual = 'X';
-    jogoAtivo = true;
-    document.getElementById('status').innerHTML = 'Vez de: <span id="nome-vez"></span>';
-    atualizarTextoVez();
-}
-
-// Inicializa a interface
-atualizarTextoVez();
