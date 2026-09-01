@@ -56,3 +56,17 @@ function verificarVitoria() {
 function verificarEmpate() {
     return [...casas].every(casa => casa.textContent !== '');
 }
+const botaoReiniciar = document.getElementById('reiniciar');
+
+botaoReiniciar.addEventListener('click', () => {
+    // Limpa todas as casas
+    casas.forEach(casa => {
+        casa.textContent = '';
+    });
+
+    // Volta para o jogador X
+    jogadorAtual = 'X';
+
+    // Ativa o jogo novamente
+    jogoAtivo = true;
+});

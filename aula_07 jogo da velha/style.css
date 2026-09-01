@@ -27,3 +27,12 @@
     position: relative;
     top: 200px;
 }
+#reiniciar {
+    display: flex;
+    margin: 30px auto;
+        padding: 12px 25px;
+    font-size: 18px;
+    border: none;
+    border: 8px;
+    cursor: pointer;
+}
