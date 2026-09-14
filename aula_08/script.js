@@ -1,6 +1,9 @@
 //true == X
 //false == O
 var ordem_jogada = true;
+var total_de_jogadas = 0;
+var total_x = 0;
+var total_o = 0;
 
 function jogar(num_btn) {
     //BUSQUE O BOTÃO QUE ESTA SENDO CLICADO
@@ -37,7 +40,6 @@ function validarGanhador() {
     const btn8_vlr = document.getElementById("8").innerHTML;
     const btn9_vlr = document.getElementById("9").innerHTML;
 
-    let venceu = false;
 
     if ((btn1_vlr == btn2_vlr)
         && (btn1_vlr == btn3_vlr)
@@ -46,6 +48,7 @@ function validarGanhador() {
         && (btn3_vlr !== "")) {
         alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
         limparJogo();
+        contabilizarganhadores();
     } else if ((btn4_vlr == btn5_vlr)
         && (btn4_vlr == btn6_vlr)
         && (btn4_vlr !== "")
@@ -53,6 +56,7 @@ function validarGanhador() {
         && (btn6_vlr !== "")) {
         alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
         limparJogo();
+        contabilizarganhadores();
     } else if ((btn7_vlr == btn8_vlr)
         && (btn7_vlr == btn9_vlr)
         && (btn7_vlr !== "")
@@ -60,6 +64,7 @@ function validarGanhador() {
         && (btn9_vlr !== "")) {
         alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
         limparJogo();
+        contabilizarganhadores();
     } else if ((btn1_vlr == btn4_vlr)
         && (btn4_vlr == btn7_vlr)
         && (btn1_vlr !== "")
@@ -67,6 +72,7 @@ function validarGanhador() {
         && (btn7_vlr !== "")) {
         alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
         limparJogo();
+        contabilizarganhadores();
     } else if ((btn2_vlr == btn5_vlr)
         && (btn2_vlr == btn8_vlr)
         && (btn2_vlr !== "")
@@ -74,6 +80,7 @@ function validarGanhador() {
         && (btn8_vlr !== "")) {
         alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
         limparJogo();
+        contabilizarganhadores();
     } else if ((btn3_vlr == btn6_vlr)
         && (btn3_vlr == btn9_vlr)
         && (btn3_vlr !== "")
@@ -81,6 +88,7 @@ function validarGanhador() {
         && (btn9_vlr !== "")) {
         alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
         limparJogo();
+        contabilizarganhadores();
     } else if ((btn1_vlr == btn5_vlr)
         && (btn1_vlr == btn9_vlr)
         && (btn1_vlr !== "")
@@ -88,6 +96,7 @@ function validarGanhador() {
         && (btn9_vlr !== "")) {
         alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
         limparJogo();
+        contabilizarganhadores();
     } else if ((btn3_vlr == btn5_vlr)
         && (btn3_vlr == btn7_vlr)
         && (btn3_vlr !== "")
@@ -95,6 +104,7 @@ function validarGanhador() {
         && (btn7_vlr !== "")) {
         alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
         limparJogo();
+        contabilizarganhadores();
     } else if (
         btn1_vlr !== ""
         && btn2_vlr !== ""
@@ -110,6 +120,7 @@ function validarGanhador() {
         const ganhador = ordem_jogada ? "O" : "X";
         alert("Empate!");
         limparJogo();
+        contabilizarganhadores();
     }
 }
 
@@ -134,4 +145,18 @@ function limparJogo() {
     document.getElementById("7").disabled = false;
     document.getElementById("8").disabled = false;
     document.getElementById("9").disabled = false;
+}
+
+function contabilizarganhadores(){
+
+total_de_jogadas++;
+
+if(ordem_jogada == true){
+    total_o++;
+}else {
+    total_x++;
+}
+document.getElementById("total_de_jogadas").innerHTML = "Total de jogadas: " + total_de_jogadas;
+document.getElementById("total_o").innerHTML = "Jogador O: " + total_o;
+document.getElementById("total_x").innerHTML = "Jogador X: " + total_x;
 }
