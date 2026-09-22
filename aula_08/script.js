@@ -1,162 +1,115 @@
-//true == X
-//false == O
-var ordem_jogada = true;
-var total_de_jogadas = 0;
-var total_x = 0;
-var total_o = 0;
+// Executa a verificação ao carregar a página de recuperação de senha
+if (window.location.pathname.includes("recuperar_senha.html")) {
+    verificarBloqueioRecuperacao();
+}
 
-function jogar(num_btn) {
-    //BUSQUE O BOTÃO QUE ESTA SENDO CLICADO
-    const botao = document.getElementById(num_btn);
+function login() {
+    // 1º Acessar o valor digitado nos campos USUARIO e SENHA
+    const campo_usuario = document.getElementById("usuario").value;
+    const campo_senha = document.getElementById("senha").value;
 
-    //ADICIONAR "X" OU "O" NO BOTÃO QUE FOI CLICADO
-    if (ordem_jogada === true) {
-        botao.innerHTML = "O";
-        // ordem_jogada = true;
-        botao.disabled = true;
+    // 2º Carregar os valores do localStorage
+    const local_usuario = localStorage.getItem("usuario");
+    const local_senha = localStorage.getItem("senha");
+
+    // 3º Validar se os valores digitados são iguais aos valores armazenados no localStorage
+    if (campo_usuario === local_usuario && campo_senha === local_senha) {
+        alert("Login realizado com sucesso! 👍");
+        window.location.href = "./home.html"; // Redireciona para a Home
     } else {
-        botao.innerHTML = "X";
-        // ordem_jogada = false;
-        botao.disabled = true;
-    }
-
-
-    //VALIDAÇÃO DOS GANHADORES
-validarGanhador();
-
-    ordem_jogada = !ordem_jogada;
-   
-}
-
-function validarGanhador() {
-
-    const btn1_vlr = document.getElementById("1").innerHTML;
-    const btn2_vlr = document.getElementById("2").innerHTML;
-    const btn3_vlr = document.getElementById("3").innerHTML;
-    const btn4_vlr = document.getElementById("4").innerHTML;
-    const btn5_vlr = document.getElementById("5").innerHTML;
-    const btn6_vlr = document.getElementById("6").innerHTML;
-    const btn7_vlr = document.getElementById("7").innerHTML;
-    const btn8_vlr = document.getElementById("8").innerHTML;
-    const btn9_vlr = document.getElementById("9").innerHTML;
-
-
-    if ((btn1_vlr == btn2_vlr)
-        && (btn1_vlr == btn3_vlr)
-        && (btn1_vlr !== "")
-        && (btn2_vlr !== "")
-        && (btn3_vlr !== "")) {
-        alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
-        limparJogo();
-        contabilizarganhadores();
-    } else if ((btn4_vlr == btn5_vlr)
-        && (btn4_vlr == btn6_vlr)
-        && (btn4_vlr !== "")
-        && (btn5_vlr !== "")
-        && (btn6_vlr !== "")) {
-        alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
-        limparJogo();
-        contabilizarganhadores();
-    } else if ((btn7_vlr == btn8_vlr)
-        && (btn7_vlr == btn9_vlr)
-        && (btn7_vlr !== "")
-        && (btn8_vlr !== "")
-        && (btn9_vlr !== "")) {
-        alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
-        limparJogo();
-        contabilizarganhadores();
-    } else if ((btn1_vlr == btn4_vlr)
-        && (btn4_vlr == btn7_vlr)
-        && (btn1_vlr !== "")
-        && (btn4_vlr !== "")
-        && (btn7_vlr !== "")) {
-        alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
-        limparJogo();
-        contabilizarganhadores();
-    } else if ((btn2_vlr == btn5_vlr)
-        && (btn2_vlr == btn8_vlr)
-        && (btn2_vlr !== "")
-        && (btn5_vlr !== "")
-        && (btn8_vlr !== "")) {
-        alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
-        limparJogo();
-        contabilizarganhadores();
-    } else if ((btn3_vlr == btn6_vlr)
-        && (btn3_vlr == btn9_vlr)
-        && (btn3_vlr !== "")
-        && (btn6_vlr !== "")
-        && (btn9_vlr !== "")) {
-        alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
-        limparJogo();
-        contabilizarganhadores();
-    } else if ((btn1_vlr == btn5_vlr)
-        && (btn1_vlr == btn9_vlr)
-        && (btn1_vlr !== "")
-        && (btn5_vlr !== "")
-        && (btn9_vlr !== "")) {
-        alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
-        limparJogo();
-        contabilizarganhadores();
-    } else if ((btn3_vlr == btn5_vlr)
-        && (btn3_vlr == btn7_vlr)
-        && (btn3_vlr !== "")
-        && (btn5_vlr !== "")
-        && (btn7_vlr !== "")) {
-        alert("O ganhador foi " + (ordem_jogada ? "O" : "X"));
-        limparJogo();
-        contabilizarganhadores();
-    } else if (
-        btn1_vlr !== ""
-        && btn2_vlr !== ""
-        && btn3_vlr !== ""
-        && btn4_vlr !== ""
-        && btn5_vlr !== ""
-        && btn6_vlr !== ""
-        && btn7_vlr !== ""
-        && btn8_vlr !== ""
-        && btn9_vlr !== ""
-    ) {
-        venceu = true;
-        const ganhador = ordem_jogada ? "O" : "X";
-        alert("Empate!");
-        limparJogo();
-        contabilizarganhadores();
+        alert("Usuário ou senha inválidos! 👎");
     }
 }
 
+function cadastro() {
+    // 1º Carregar os campos de cadastro
+    const nome = document.getElementById("nome").value;
+    const usuario = document.getElementById("cad_usuario").value;
+    const senha = document.getElementById("cad_senha").value;
+    const palavraPasse = document.getElementById("palavra_passe").value;
 
-function limparJogo() {
-    document.getElementById("1").innerHTML = "";
-    document.getElementById("2").innerHTML = "";
-    document.getElementById("3").innerHTML = "";
-    document.getElementById("4").innerHTML = "";
-    document.getElementById("5").innerHTML = "";
-    document.getElementById("6").innerHTML = "";
-    document.getElementById("7").innerHTML = "";
-    document.getElementById("8").innerHTML = "";
-    document.getElementById("9").innerHTML = "";
+    if (!nome || !usuario || !senha || !palavraPasse) {
+        alert("Por favor, preencha todos os campos!");
+        return;
+    }
 
-    document.getElementById("1").disabled = false;
-    document.getElementById("2").disabled = false;
-    document.getElementById("3").disabled = false;
-    document.getElementById("4").disabled = false;
-    document.getElementById("5").disabled = false;
-    document.getElementById("6").disabled = false;
-    document.getElementById("7").disabled = false;
-    document.getElementById("8").disabled = false;
-    document.getElementById("9").disabled = false;
+    // 2º Cadastrar os dados no localStorage
+    localStorage.setItem("nome", nome);
+    localStorage.setItem("usuario", usuario);
+    localStorage.setItem("senha", senha);
+    localStorage.setItem("palavraPasse", palavraPasse);
+    
+    // Reseta as tentativas incorretas para novo cadastro
+    localStorage.setItem("tentativasIncorretas", "0");
+
+    alert("Cadastro realizado com sucesso!");
+
+    // 3º Redirecionar para a tela de login
+    window.location.href = "./login.html";
 }
 
-function contabilizarganhadores(){
+function recuperar_senha() {
+    // 1º Carregar os valores dos campos NOME e PALAVRA-PASSE
+    const recNomeInput = document.getElementById("rec_nome");
+    const recPalavraPasseInput = document.getElementById("rec_palavra_passe");
 
-total_de_jogadas++;
+    const recNome = recNomeInput.value;
+    const recPalavraPasse = recPalavraPasseInput.value;
 
-if(ordem_jogada == true){
-    total_o++;
-}else {
-    total_x++;
+    // 2º Buscar no localStorage os valores
+    const localNome = localStorage.getItem("nome");
+    const localPalavraPasse = localStorage.getItem("palavraPasse");
+    const localSenha = localStorage.getItem("senha");
+
+    let tentativas = parseInt(localStorage.getItem("tentativasIncorretas") || "0");
+
+    // Se já tiver atingido 3 erros, bloqueia de imediato
+    if (tentativas >= 3) {
+        bloquearRecuperacao();
+        return;
+    }
+
+    // 3º Comparar os valores
+    if (recNome === localNome && recPalavraPasse === localPalavraPasse) {
+        alert("Dados confirmados! Sua senha é: " + localSenha);
+        localStorage.setItem("tentativasIncorretas", "0"); // Reseta o contador ao acertar
+    } else {
+        tentativas++;
+        localStorage.setItem("tentativasIncorretas", tentativas.toString());
+
+        if (tentativas >= 3) {
+            alert("Você errou 3 vezes! O acesso à recuperação de senha foi bloqueado.");
+            bloquearRecuperacao();
+        } else {
+            alert(`Dados incorretos! Você tem mais ${3 - tentativas} tentativa(s).`);
+            // Limpa os campos de entrada
+            recNomeInput.value = "";
+            recPalavraPasseInput.value = "";
+        }
+    }
 }
-document.getElementById("total_de_jogadas").innerHTML = "Total de jogadas: " + total_de_jogadas;
-document.getElementById("total_o").innerHTML = "Jogador O: " + total_o;
-document.getElementById("total_x").innerHTML = "Jogador X: " + total_x;
+
+// Função auxiliar para bloquear os campos de recuperação
+function bloquearRecuperacao() {
+    const inputNome = document.getElementById("rec_nome");
+    const inputPalavraPasse = document.getElementById("rec_palavra_passe");
+    const btnRecuperar = document.getElementById("btn_recuperar");
+
+    if (inputNome && inputPalavraPasse && btnRecuperar) {
+        inputNome.disabled = true;
+        inputPalavraPasse.disabled = true;
+        btnRecuperar.disabled = true;
+    }
+}
+
+// Verifica se os campos devem ser bloqueados ao entrar na tela
+function verificarBloqueioRecuperacao() {
+    const tentativas = parseInt(localStorage.getItem("tentativasIncorretas") || "0");
+    if (tentativas >= 3) {
+        // Aguarda carregar o DOM se necessário
+        window.addEventListener("DOMContentLoaded", () => {
+            bloquearRecuperacao();
+            alert("A recuperação de senha está bloqueada por excesso de tentativas.");
+        });
+    }
 }
