@@ -36,6 +36,54 @@ body {
   color: #ffeb3b;
 }
 
+.header-acoes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-auth, .btn-historico {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s;
+}
+
+.btn-auth:hover, .btn-historico:hover {
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,0,0,0.2);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.88rem;
+}
+
+.btn-logout {
+  background: none;
+  border: none;
+  color: #ffcdd2;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-left: 5px;
+}
+
+.btn-logout:hover {
+  color: #fff;
+}
+
 .btn-carrinho {
   background-color: #b71c1c;
   color: white;
@@ -325,7 +373,7 @@ body {
   display: block;
 }
 
-/* --- MODAIS DE CHECKOUT E COMPROVANTE --- */
+/* --- MODAIS --- */
 .modal-bg {
   position: fixed;
   top: 0;
@@ -362,6 +410,37 @@ body {
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
+}
+
+/* AUTH ABAS & FORMULÁRIOS */
+.auth-abas {
+  display: flex;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 15px;
+}
+
+.btn-aba {
+  flex: 1;
+  padding: 10px;
+  background: none;
+  border: none;
+  font-weight: bold;
+  font-size: 1rem;
+  color: #777;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+}
+
+.btn-aba.active {
+  color: #d32f2f;
+  border-bottom-color: #d32f2f;
+}
+
+.auth-subtitulo {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 15px;
+  text-align: center;
 }
 
 .grupo-campo {
@@ -406,7 +485,42 @@ body {
   background-color: #1b5e20;
 }
 
-/* ESTILOS DO COMPROVANTE FISCAL NO SITE */
+/* HISTÓRICO DE PEDIDOS */
+.historico-lista {
+  margin-top: 15px;
+
+}
+
+.card-historico {
+  background: #fdfdfd;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.card-historico-topo {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  color: #d32f2f;
+}
+
+.card-historico-data {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.card-historico-itens {
+  font-size: 0.85rem;
+  color: #555;
+  margin: 6px 0;
+  line-height: 1.4;
+}
+
+/* COMPROVANTE */
 .modal-comprovante {
   text-align: center;
 }

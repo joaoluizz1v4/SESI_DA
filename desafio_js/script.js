@@ -52,6 +52,7 @@ const produtos = [
 
 // VARIÁVEIS DE ESTADO
 let carrinho = [];
+let usuarioLogado = null;
 const taxaEntrega = 5.00;
 
 // ELEMENTOS DOM
@@ -66,24 +67,180 @@ const subtotalSpan = document.getElementById('subtotal');
 const totalFinalSpan = document.getElementById('total-final');
 const btnIrCheckout = document.getElementById('btn-ir-checkout');
 
+// AUTH DOM
+const areaUsuario = document.getElementById('area-usuario');
+const btnAbrirAuth = document.getElementById('btn-abrir-auth');
+const modalAuth = document.getElementById('modal-auth');
+const fecharAuth = document.getElementById('fechar-auth');
+const abaLogin = document.getElementById('aba-login');
+const abaCadastro = document.getElementById('aba-cadastro');
+const formLogin = document.getElementById('form-login');
+const formCadastro = document.getElementById('form-cadastro');
+
+// CHECKOUT DOM
 const modalCheckout = document.getElementById('modal-checkout');
 const fecharCheckout = document.getElementById('fechar-checkout');
 const formCheckout = document.getElementById('form-checkout');
 const selectPagamento = document.getElementById('pagamento');
 const boxTroco = document.getElementById('box-troco');
 
+// COMPROVANTE DOM
 const modalSucesso = document.getElementById('modal-sucesso');
 const conteudoComprovante = document.getElementById('conteudo-comprovante');
 const btnFecharSucesso = document.getElementById('btn-fechar-sucesso');
+
+// HISTÓRICO DOM
+const btnAbrirHistorico = document.getElementById('btn-abrir-historico');
+const modalHistorico = document.getElementById('modal-historico');
+const fecharHistorico = document.getElementById('fechar-historico');
+const listaPedidosHistorico = document.getElementById('lista-pedidos-historico');
+
 const toast = document.getElementById('toast');
 
-// --- EXIBIR NOTIFICAÇÃO TOAST ---
+// --- TOAST ---
 function mostrarToast(mensagem) {
   toast.textContent = mensagem;
   toast.classList.add('active');
   setTimeout(() => {
     toast.classList.remove('active');
   }, 3000);
+}
+
+// --- BANCO DE DADOS (LOCALSTORAGE) ---
+function obterUsuarios() {
+  return JSON.parse(localStorage.getItem('xtudo_usuarios')) || [];
+}
+
+function salvarUsuarios(usuarios) {
+  localStorage.setItem('xtudo_usuarios', JSON.stringify(usuarios));
+}
+
+function obterPedidos() {
+  return JSON.parse(localStorage.getItem('xtudo_pedidos')) || [];
+}
+
+function salvarPedidosLocal(pedidos) {
+  localStorage.setItem('xtudo_pedidos', JSON.stringify(pedidos));
+}
+
+// --- GERENCIAMENTO DE SESSÃO / AUTH ---
+function carregarSessao() {
+  const sessao = localStorage.getItem('xtudo_usuario_logado');
+  if (sessao) {
+    usuarioLogado = JSON.parse(sessao);
+    renderizarAreaUsuario();
+  }
+}
+
+function renderizarAreaUsuario() {
+  if (usuarioLogado) {
+    areaUsuario.innerHTML = `
+      <div class="user-badge">
+        <i class="fa-solid fa-user-check"></i>
+        <span>Olá, <strong>${usuarioLogado.usuario}</strong></span>
+        <button class="btn-logout" id="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></button>
+      </div>
+    `;
+    document.getElementById('btn-logout').addEventListener('click', fazerLogout);
+  } else {
+    areaUsuario.innerHTML = `
+      <button class="btn-auth" id="btn-abrir-auth">
+        <i class="fa-solid fa-user"></i> Entrar
+      </button>
+    `;
+    document.getElementById('btn-abrir-auth').addEventListener('click', abrirModalAuth);
+  }
+}
+
+function abrirModalAuth() {
+  modalAuth.classList.add('active');
+  overlay.classList.add('active');
+}
+
+function fecharModalAuth() {
+  modalAuth.classList.remove('active');
+  overlay.classList.remove('active');
+}
+
+if (btnAbrirAuth) btnAbrirAuth.addEventListener('click', abrirModalAuth);
+fecharAuth.addEventListener('click', fecharModalAuth);
+
+// TROCA DE ABAS LOGIN / CADASTRO
+abaLogin.addEventListener('click', () => {
+  abaLogin.classList.add('active');
+  abaCadastro.classList.remove('active');
+  formLogin.classList.remove('escondido');
+  formCadastro.classList.add('escondido');
+});
+
+abaCadastro.addEventListener('click', () => {
+  abaCadastro.classList.add('active');
+  abaLogin.classList.remove('active');
+  formCadastro.classList.remove('escondido');
+  formLogin.classList.add('escondido');
+});
+
+// SUBMIT CADASTRO
+formCadastro.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const usuario = document.getElementById('cad-usuario').value.trim();
+  const email = document.getElementById('cad-email').value.trim().toLowerCase();
+  const senha = document.getElementById('cad-senha').value;
+
+  const usuarios = obterUsuarios();
+
+  if (usuarios.some(u => u.usuario.toLowerCase() === usuario.toLowerCase())) {
+    mostrarToast("Nome de usuário já existe!");
+    return;
+  }
+
+  if (usuarios.some(u => u.email === email)) {
+    mostrarToast("E-mail já está cadastrado!");
+    return;
+  }
+
+  const novoUsuario = { usuario, email, senha };
+  usuarios.push(novoUsuario);
+  salvarUsuarios(usuarios);
+
+  // Auto-login após cadastro
+  usuarioLogado = novoUsuario;
+  localStorage.setItem('xtudo_usuario_logado', JSON.stringify(usuarioLogado));
+  renderizarAreaUsuario();
+  fecharModalAuth();
+  formCadastro.reset();
+  mostrarToast("Conta criada com sucesso!");
+});
+
+// SUBMIT LOGIN (Aceita Usuário OU E-mail)
+formLogin.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const identificador = document.getElementById('login-identificador').value.trim().toLowerCase();
+  const senha = document.getElementById('login-senha').value;
+
+  const usuarios = obterUsuarios();
+  const usuarioEncontrado = usuarios.find(
+    u => (u.usuario.toLowerCase() === identificador || u.email.toLowerCase() === identificador) && u.senha === senha
+  );
+
+  if (!usuarioEncontrado) {
+    mostrarToast("Usuário/E-mail ou senha incorretos!");
+    return;
+  }
+
+  usuarioLogado = usuarioEncontrado;
+  localStorage.setItem('xtudo_usuario_logado', JSON.stringify(usuarioLogado));
+  renderizarAreaUsuario();
+  fecharModalAuth();
+  formLogin.reset();
+  mostrarToast(`Bem-vindo de volta, ${usuarioLogado.usuario}!`);
+});
+
+function fazerLogout() {
+  usuarioLogado = null;
+  localStorage.removeItem('xtudo_usuario_logado');
+  renderizarAreaUsuario();
+  mostrarToast("Você saiu da conta.");
 }
 
 // --- RENDERIZAR PRODUTOS ---
@@ -198,6 +355,8 @@ overlay.addEventListener('click', () => {
   fecharCarrinhoDrawer();
   modalCheckout.classList.remove('active');
   modalSucesso.classList.remove('active');
+  modalAuth.classList.remove('active');
+  modalHistorico.classList.remove('active');
 });
 
 // --- BUSCA E FILTROS ---
@@ -222,8 +381,12 @@ btnsCategorias.forEach(btn => {
   });
 });
 
-// --- CHECKOUT E FINALIZAÇÃO DENTRO DO SITE ---
+// --- CHECKOUT E CONFIRMAÇÃO ---
 btnIrCheckout.addEventListener('click', () => {
+  // Preenche nome automaticamente se estiver logado
+  if (usuarioLogado) {
+    document.getElementById('nome').value = usuarioLogado.usuario;
+  }
   fecharCarrinhoDrawer();
   modalCheckout.classList.add('active');
   overlay.classList.add('active');
@@ -242,7 +405,7 @@ selectPagamento.addEventListener('change', (e) => {
   }
 });
 
-// SUBMIT DO FORMULÁRIO (SEM WHATSAPP)
+// SUBMIT DO PEDIDO
 formCheckout.addEventListener('submit', (e) => {
   e.preventDefault();
 
@@ -258,7 +421,26 @@ formCheckout.addEventListener('submit', (e) => {
   let subtotal = carrinho.reduce((acc, i) => acc + (i.preco * i.qtd), 0);
   let total = subtotal + taxaEntrega;
 
-  // Monta o comprovante no formato de recibo em HTML
+  const pedidoObj = {
+    id: numPedido,
+    data: new Date().toLocaleString('pt-BR'),
+    usuarioLogado: usuarioLogado ? usuarioLogado.usuario : 'Convidado',
+    cliente: nome,
+    telefone,
+    endereco: `${endereco} - ${bairro}`,
+    pagamento,
+    itens: [...carrinho],
+    subtotal,
+    taxaEntrega,
+    total
+  };
+
+  // Salva pedido no localStorage
+  const historico = obterPedidos();
+  historico.push(pedidoObj);
+  salvarPedidosLocal(historico);
+
+  // Monta comprovante
   let htmlRecibo = `
     <h4>LANCHONETE X-TUDO - PEDIDO #${numPedido}</h4>
     <div class="comprovante-linha"><span>Cliente:</span> <strong>${nome}</strong></div>
@@ -296,12 +478,10 @@ formCheckout.addEventListener('submit', (e) => {
     htmlRecibo += `<div class="comprovante-linha" style="margin-top:5px;"><span>Obs:</span> <span>${obs}</span></div>`;
   }
 
-  // Atualiza e exibe o modal de comprovante na tela
   conteudoComprovante.innerHTML = htmlRecibo;
   modalCheckout.classList.remove('active');
   modalSucesso.classList.add('active');
 
-  // Limpa o carrinho e reseta o formulário
   carrinho = [];
   atualizarCarrinho();
   formCheckout.reset();
@@ -314,5 +494,46 @@ btnFecharSucesso.addEventListener('click', () => {
   mostrarToast("Obrigado pelo seu pedido!");
 });
 
-// INICIALIZAR
+// --- HISTÓRICO DE PEDIDOS ---
+btnAbrirHistorico.addEventListener('click', () => {
+  const todosPedidos = obterPedidos();
+  
+  // Filtra por usuário logado ou mostra geral se não houver filtro estrito
+  const meusPedidos = usuarioLogado 
+    ? todosPedidos.filter(p => p.usuarioLogado === usuarioLogado.usuario)
+    : todosPedidos;
+
+  listaPedidosHistorico.innerHTML = "";
+
+  if (meusPedidos.length === 0) {
+    listaPedidosHistorico.innerHTML = "<p style='text-align:center; color:#777; margin:20px 0;'>Nenhum pedido realizado ainda.</p>";
+  } else {
+    meusPedidos.reverse().forEach(ped => {
+      const div = document.createElement('div');
+      div.className = 'card-historico';
+      const itensTxt = ped.itens.map(i => `${i.qtd}x ${i.nome}`).join(', ');
+      
+      div.innerHTML = `
+        <div class="card-historico-topo">
+          <span>Pedido #${ped.id}</span>
+          <span>R$ ${ped.total.toFixed(2).replace('.', ',')}</span>
+        </div>
+        <div class="card-historico-data"><i class="fa-regular fa-calendar"></i> ${ped.data}</div>
+        <div class="card-historico-itens">${itensTxt}</div>
+      `;
+      listaPedidosHistorico.appendChild(div);
+    });
+  }
+
+  modalHistorico.classList.add('active');
+  overlay.classList.add('active');
+});
+
+fecharHistorico.addEventListener('click', () => {
+  modalHistorico.classList.remove('active');
+  overlay.classList.remove('active');
+});
+
+// INICIALIZAÇÃO
+carregarSessao();
 renderizarProdutos(produtos);
