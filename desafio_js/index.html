@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lanchonete X-Tudo - Fazer Pedido</title>
+
+  <!-- Ícones e Estilos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- CABEÇALHO -->
+  <header class="header">
+    <div class="logo">
+      <i class="fa-solid fa-burger"></i>
+      <h1>Lanchonete <span>X-Tudo</span></h1>
+    </div>
+
+    <!-- Botão de abrir o carrinho -->
+    <button class="btn-carrinho" id="btn-abrir-carrinho">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <span class="badge" id="carrinho-qtd">0</span>
+    </button>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="container">
+
+    <!-- BUSCA E FILTROS -->
+    <section class="topo-cardapio">
+      <div class="busca-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="campo-busca" placeholder="O que você quer comer hoje?">
+      </div>
+
+      <div class="categorias" id="botoes-categorias">
+        <button class="btn-categoria active" data-cat="todos">Todos</button>
+        <button class="btn-categoria" data-cat="lanches">Lanches</button>
+        <button class="btn-categoria" data-cat="bebidas">Bebidas</button>
+        <button class="btn-categoria" data-cat="porcoes">Porções</button>
+        <button class="btn-categoria" data-cat="sobremesas">Sobremesas</button>
+      </div>
+    </section>
+
+    <!-- LISTA DE PRODUTOS -->
+    <section class="grid-produtos" id="grid-produtos">
+      <!-- Injetado pelo JS -->
+    </section>
+
+  </main>
+
+  <!-- CARRINHO LATERAL (DRAWER) -->
+  <aside class="carrinho-sidebar" id="carrinho-sidebar">
+    <div class="carrinho-topo">
+      <h2><i class="fa-solid fa-bag-shopping"></i> Seu Pedido</h2>
+      <button class="btn-fechar" id="btn-fechar-carrinho">&times;</button>
+    </div>
+
+    <div class="carrinho-itens" id="carrinho-itens">
+      <p class="carrinho-vazio">Seu carrinho está vazio no momento.</p>
+    </div>
+
+    <div class="carrinho-rodape">
+      <div class="resumo-linha">
+        <span>Subtotal:</span>
+        <span id="subtotal">R$ 0,00</span>
+      </div>
+      <div class="resumo-linha">
+        <span>Taxa de Entrega:</span>
+        <span id="taxa-entrega">R$ 5,00</span>
+      </div>
+      <div class="resumo-linha total">
+        <span>Total:</span>
+        <span id="total-final">R$ 5,00</span>
+      </div>
+
+      <button class="btn-finalizar" id="btn-ir-checkout" disabled>
+        Avançar para Entrega
+      </button>
+    </div>
+  </aside>
+
+  <!-- MODAL DE CHECKOUT (FORMULÁRIO DE DADOS) -->
+  <div class="modal-bg" id="modal-checkout">
+    <div class="modal-box">
+      <button class="modal-fechar" id="fechar-checkout">&times;</button>
+      <h3>Dados para Entrega</h3>
+
+      <form id="form-checkout">
+        <div class="grupo-campo">
+          <label for="nome">Nome Completo *</label>
+          <input type="text" id="nome" required placeholder="Ex: João Silva">
+        </div>
+
+        <div class="grupo-campo">
+          <label for="telefone">Telefone / Celular *</label>
+          <input type="tel" id="telefone" required placeholder="(00) 90000-0000">
+        </div>
+
+        <div class="grupo-campo">
+          <label for="endereco">Endereço e Número *</label>
+          <input type="text" id="endereco" required placeholder="Rua das Flores, 123">
+        </div>
+
+        <div class="grupo-campo">
+          <label for="bairro">Bairro *</label>
+          <input type="text" id="bairro" required placeholder="Centro">
+        </div>
+
+        <div class="grupo-campo">
+          <label for="pagamento">Forma de Pagamento *</label>
+          <select id="pagamento" required>
+            <option value="pix">PIX</option>
+            <option value="cartao">Cartão de Crédito/Débito</option>
+            <option value="dinheiro">Dinheiro</option>
+          </select>
+        </div>
+
+        <div class="grupo-campo escondido" id="box-troco">
+          <label for="troco">Troco para quanto?</label>
+          <input type="number" id="troco" placeholder="Ex: 50.00" step="0.01">
+        </div>
+
+        <div class="grupo-campo">
+          <label for="obs">Observações (opcional)</label>
+          <textarea id="obs" rows="2" placeholder="Ex: Tirar a cebola, mandar maionese extra..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-enviar-pedido">
+          <i class="fa-solid fa-check-circle"></i> Confirmar e Fazer Pedido
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE CONFIRMAÇÃO DO PEDIDO (COMPROVANTE NO SITE) -->
+  <div class="modal-bg" id="modal-sucesso">
+    <div class="modal-box modal-comprovante">
+      <div class="comprovante-icone">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <h2>Pedido Confirmado!</h2>
+      <p class="status-tempo"><i class="fa-solid fa-clock"></i> Tempo estimado: <strong>30 - 45 min</strong></p>
+
+      <div class="comprovante-conteudo" id="conteudo-comprovante">
+        <!-- Preenchido dinamicamente via JS -->
+      </div>
+
+      <button class="btn-fechar-comprovante" id="btn-fechar-sucesso">
+        Fazer Novo Pedido
+      </button>
+    </div>
+  </div>
+
+  <!-- OVERLAY E MENSAGENS TOAST -->
+  <div class="overlay" id="overlay"></div>
+  <div class="toast" id="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
